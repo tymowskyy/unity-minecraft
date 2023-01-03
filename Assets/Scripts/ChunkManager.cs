@@ -6,6 +6,7 @@ public class ChunkManager : MonoBehaviour
 {
     public GameObject chunk_prefab;
     private Dictionary<Vector2, GameObject> chunks;
+    private readonly int[,,] empty_chunk = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
 
     // Start is called before the first frame update
     void Start()
@@ -56,7 +57,22 @@ public class ChunkManager : MonoBehaviour
         foreach (var item in chunks)
         {
             Chunk chunk_component = item.Value.GetComponent<Chunk>();
-            chunk_component.terrain.UpdateChunk(ref chunk_component.blocks);
+
+            chunk_component.terrain.UpdateChunk(
+                chunk_component.blocks,
+                GetChunkBlocks(item.Key + new Vector2(1, 0)),
+                GetChunkBlocks(item.Key + new Vector2(-1, 0)),
+                GetChunkBlocks(item.Key + new Vector2(0, 1)),
+                GetChunkBlocks(item.Key + new Vector2(0, -1))
+            );
         }
+    }
+
+    private int[,,] GetChunkBlocks(Vector2 chunk_pos)
+    {
+        return
+            chunks.ContainsKey(chunk_pos) ?
+            chunks[chunk_pos].GetComponent<Chunk>().blocks :
+            empty_chunk;
     }
 }
