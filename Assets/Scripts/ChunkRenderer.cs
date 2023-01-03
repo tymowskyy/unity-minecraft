@@ -9,7 +9,7 @@ public class ChunkRenderer : MonoBehaviour
     private List<Vector3> vertices;
     private List<int> triangles;
 
-    public void OnStart()
+    void Awake()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
