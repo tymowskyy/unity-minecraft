@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class Chunk : MonoBehaviour
 {
-    public int[,,] blocks;
+    public Block[,,] blocks;
     public ChunkRenderer terrain;
-
-    // Start is called before the first frame update
-    void Awake()
-    {
-        blocks = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
-    }
 
     public static bool IsInChunk(int x, int y, int z)
     {

@@ -10,7 +10,7 @@ public class ChunkRenderer : MonoBehaviour
     private List<Vector3> vertices;
     private List<int> triangles;
     private List<Vector2> uvs;
-    private int[,,] blocks, blocks_plus_x, blocks_minus_x, blocks_plus_z, blocks_minus_z;
+    private Block[,,] blocks, blocks_plus_x, blocks_minus_x, blocks_plus_z, blocks_minus_z;
 
     void Awake()
     {
@@ -18,7 +18,7 @@ public class ChunkRenderer : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    public void UpdateChunk(int[,,] new_blocks, int[,,] new_blocks_plus_x, int[,,] new_blocks_minus_x, int[,,] new_blocks_plus_z, int[,,] new_blocks_minus_z)
+    public void UpdateChunk(Block[,,] new_blocks, Block[,,] new_blocks_plus_x, Block[,,] new_blocks_minus_x, Block[,,] new_blocks_plus_z, Block[,,] new_blocks_minus_z)
     {
         blocks = new_blocks;
         blocks_plus_x = new_blocks_plus_x;
@@ -49,17 +49,17 @@ public class ChunkRenderer : MonoBehaviour
     private void UpdateBlock(int x, int y, int z)
     {
         if (!Chunk.IsInChunk(x, y, z) ||
-            blocks[x, y, z] == 0) return;
+            blocks[x, y, z] == Block.Air) return;
 
         Vector3 vertex = new Vector3(x, y, z);
-        if (GetBlock(x - 1, y, z) == 0)
+        if (GetBlock(x - 1, y, z) == Block.Air)
             UpdateFace(vertex, new Vector3[] {
                 new Vector3(0, 0, 0),
                 new Vector3(0, 0, 1),
                 new Vector3(0, 1, 0),
                 new Vector3(0, 1, 1),
             });
-        if (GetBlock(x + 1, y, z) == 0)
+        if (GetBlock(x + 1, y, z) == Block.Air)
             UpdateFace(vertex, new Vector3[] {
                 new Vector3(1, 0, 0),
                 new Vector3(1, 1, 0),
@@ -67,7 +67,7 @@ public class ChunkRenderer : MonoBehaviour
                 new Vector3(1, 1, 1),
             });
 
-        if (GetBlock(x, y - 1, z) == 0)
+        if (GetBlock(x, y - 1, z) == Block.Air)
             UpdateFace(vertex, new Vector3[] {
                 new Vector3(0, 0, 0),
                 new Vector3(1, 0, 0),
@@ -75,7 +75,7 @@ public class ChunkRenderer : MonoBehaviour
                 new Vector3(1, 0, 1),
             });
 
-        if (GetBlock(x, y + 1, z) == 0)
+        if (GetBlock(x, y + 1, z) == Block.Air)
             UpdateFace(vertex, new Vector3[] {
                 new Vector3(0, 1, 0),
                 new Vector3(0, 1, 1),
@@ -83,7 +83,7 @@ public class ChunkRenderer : MonoBehaviour
                 new Vector3(1, 1, 1),
             });
 
-        if (GetBlock(x, y, z - 1) == 0)
+        if (GetBlock(x, y, z - 1) == Block.Air)
             UpdateFace(vertex, new Vector3[] {
                 new Vector3(0, 0, 0),
                 new Vector3(0, 1, 0),
@@ -91,7 +91,7 @@ public class ChunkRenderer : MonoBehaviour
                 new Vector3(1, 1, 0),
             });
 
-        if (GetBlock(x, y, z + 1) == 0)
+        if (GetBlock(x, y, z + 1) == Block.Air)
             UpdateFace(vertex, new Vector3[] {
                 new Vector3(0, 0, 1),
                 new Vector3(1, 0, 1),
@@ -100,7 +100,7 @@ public class ChunkRenderer : MonoBehaviour
             });
     }
 
-    private int GetBlock(int x, int y, int z)
+    private Block GetBlock(int x, int y, int z)
     {
         if (y < 0 || y >= Settings.CHUNK_HEIGHT) return 0;
         if (Chunk.IsInChunk(x, y, z)) return blocks[x, y, z];

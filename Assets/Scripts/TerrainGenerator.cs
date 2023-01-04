@@ -19,9 +19,9 @@ public class TerrainGenerator : MonoBehaviour
         Debug.Log("Seed: " + seed);
     }
 
-    public int[,,] GenerateChunk(int chunk_x, int chunk_z)
+    public Block[,,] GenerateChunk(int chunk_x, int chunk_z)
     {
-        int[,,] blocks = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
+        Block[,,] blocks = new Block[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
         for (int x = 0; x < Settings.CHUNK_WIDTH; ++x)
         {
             for (int z = 0; z < Settings.CHUNK_WIDTH; ++z)
@@ -44,9 +44,10 @@ public class TerrainGenerator : MonoBehaviour
         return blocks;
     }
 
-    private int GenerateBlock(int x, int y, int z)
+    private Block GenerateBlock(int x, int y, int z)
     {
-        if (y > height_noise[x, z]) return 0;
-        return 1;
+        if (y > height_noise[x, z]) return Block.Air;
+        else if (y == height_noise[x, z]) return Block.Grass;
+        return Block.Dirt;
     }
 }

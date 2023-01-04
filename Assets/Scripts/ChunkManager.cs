@@ -7,7 +7,7 @@ public class ChunkManager : MonoBehaviour
 {
     public GameObject chunk_prefab;
     private Dictionary<Vector2, GameObject> chunks;
-    private readonly int[,,] empty_chunk = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
+    private readonly Block[,,] empty_chunk = new Block[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
     private TerrainGenerator terrainGenerator;
 
     // Start is called before the first frame update
@@ -63,7 +63,7 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    private int[,,] GetChunkBlocks(Vector2 chunk_pos)
+    private Block[,,] GetChunkBlocks(Vector2 chunk_pos)
     {
         return
             chunks.ContainsKey(chunk_pos) ?
