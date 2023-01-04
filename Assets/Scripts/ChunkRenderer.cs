@@ -98,7 +98,7 @@ public class ChunkRenderer : MonoBehaviour
 
     private int GetBlock(int x, int y, int z)
     {
-        if (y < 0 || y >= Settings.CHUNK_WIDTH) return 0;
+        if (y < 0 || y >= Settings.CHUNK_HEIGHT) return 0;
         if (Chunk.IsInChunk(x, y, z)) return blocks[x, y, z];
         if (x < 0) return blocks_minus_x[Settings.CHUNK_WIDTH-1, y, z];
         if (x >= Settings.CHUNK_WIDTH) return blocks_plus_x[0, y, z];

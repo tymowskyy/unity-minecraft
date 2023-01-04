@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(TerrainGenerator))]
 public class ChunkManager : MonoBehaviour
 {
     public GameObject chunk_prefab;
     private Dictionary<Vector2, GameObject> chunks;
     private readonly int[,,] empty_chunk = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
+    private TerrainGenerator terrainGenerator;
 
     // Start is called before the first frame update
     void Start()
     {
+        terrainGenerator = GetComponent<TerrainGenerator>();
         chunks = new Dictionary<Vector2, GameObject>();
         GenerateWorld();
         RenderWorld();
@@ -39,17 +42,9 @@ public class ChunkManager : MonoBehaviour
             new Vector2(chunk_x, chunk_z),
             chunk
         );
-        for (int x = 0; x < Settings.CHUNK_WIDTH; ++x)
-        {
-            for (int z = 0; z < Settings.CHUNK_WIDTH; ++z)
-            {
-                int height = Random.Range(16, 20);
-                for (int y = 0; y < height; ++y)
-                {
-                    chunk.GetComponent<Chunk>().blocks[x, y, z] = 1;
-                }
-            }
-        }
+
+        chunk.GetComponent<Chunk>().blocks = terrainGenerator.GenerateChunk(chunk_x, chunk_z);
+
     }
 
     private void RenderWorld()
