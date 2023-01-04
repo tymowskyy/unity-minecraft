@@ -5,9 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class ChunkRenderer : MonoBehaviour
 {
+    private const float EPSILON = 0.00001f;
     private Mesh mesh;
     private List<Vector3> vertices;
     private List<int> triangles;
+    private List<Vector2> uvs;
     private int[,,] blocks, blocks_plus_x, blocks_minus_x, blocks_plus_z, blocks_minus_z;
 
     void Awake()
@@ -25,6 +27,7 @@ public class ChunkRenderer : MonoBehaviour
         blocks_minus_z = new_blocks_minus_z;
         vertices = new List<Vector3>();
         triangles = new List<int>();
+        uvs = new List<Vector2>();
 
         for (int x = 0; x < Settings.CHUNK_WIDTH; ++x)
         {
@@ -39,6 +42,7 @@ public class ChunkRenderer : MonoBehaviour
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
+        mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
     }
 
@@ -120,6 +124,14 @@ public class ChunkRenderer : MonoBehaviour
             index + 2,
             index + 1,
             index + 3,
+        });
+
+        uvs.AddRange(new Vector2[]
+        {
+            new Vector2(0f + EPSILON, 0.75f + EPSILON),
+            new Vector2(0f + EPSILON, 1f - EPSILON),
+            new Vector2(0.25f - EPSILON , 0.75f + EPSILON),
+            new Vector2(0.25f - EPSILON, 1f - EPSILON),
         });
     }
 }
