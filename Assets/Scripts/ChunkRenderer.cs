@@ -107,6 +107,7 @@ public class ChunkRenderer : MonoBehaviour
         Vector3 vertex = new Vector3(x, y, z);
         if (GetBlock(x - 1, y, z) == Block.Air)
             UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Back);
+
         if (GetBlock(x + 1, y, z) == Block.Air)
             UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Front);
 
@@ -125,7 +126,7 @@ public class ChunkRenderer : MonoBehaviour
 
     private Block GetBlock(int x, int y, int z)
     {
-        if (y < 0 || y >= Settings.CHUNK_HEIGHT) return 0;
+        if (y < 0 || y >= Settings.CHUNK_HEIGHT) return Block.Air;
         if (Chunk.IsInChunk(x, y, z)) return blocks[x, y, z];
         if (x < 0) return blocks_minus_x[Settings.CHUNK_WIDTH-1, y, z];
         if (x >= Settings.CHUNK_WIDTH) return blocks_plus_x[0, y, z];

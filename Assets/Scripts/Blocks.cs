@@ -6,7 +6,8 @@ public enum Block
 {
     Air,
     Dirt,
-    Grass
+    Grass,
+    Stone
 }
 
 public enum FaceOrientation
@@ -49,6 +50,18 @@ public class BlockData
                 { FaceOrientation.Right, new Vector2(2, 0) },
                 { FaceOrientation.Front, new Vector2(2, 0) },
                 { FaceOrientation.Back, new Vector2(2, 0) },
+            }
+        },
+        {
+            Block.Stone,
+            new Dictionary<FaceOrientation, Vector2>()
+            {
+                { FaceOrientation.Up, new Vector2(3, 0) },
+                { FaceOrientation.Down, new Vector2(3, 0) },
+                { FaceOrientation.Left, new Vector2(3, 0) },
+                { FaceOrientation.Right, new Vector2(3, 0) },
+                { FaceOrientation.Front, new Vector2(3, 0) },
+                { FaceOrientation.Back, new Vector2(3, 0) },
             }
         },
     };
