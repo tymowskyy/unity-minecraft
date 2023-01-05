@@ -22,9 +22,9 @@ public enum FaceOrientation
 
 public class BlockData
 {
-    private const int NSPRITES = 4;
+    private const int N_SPRITES = 4;
     private const float EPSILON = 0.0001f;
-    private const float STEP = 1 / (float)NSPRITES;
+    private const float STEP = 1 / (float)N_SPRITES;
 
     public static Dictionary<Block, Dictionary<FaceOrientation, Vector2>> spritePositions = new Dictionary<Block, Dictionary<FaceOrientation, Vector2>>()
     {
@@ -68,7 +68,7 @@ public class BlockData
 
     public static Vector2[] GetUVCoordinates(Vector2 SpritePosition)
     {
-        SpritePosition /= (float)NSPRITES;
+        SpritePosition /= (float)N_SPRITES;
         Vector2[] uvs = new Vector2[] 
         {
             SpritePosition + new Vector2(EPSILON, EPSILON),

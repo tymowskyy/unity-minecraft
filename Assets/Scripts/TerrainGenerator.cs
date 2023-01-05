@@ -27,15 +27,15 @@ public class TerrainGenerator : MonoBehaviour
         dirtLevelNoise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
     }
 
-    public Block[,,] GenerateChunk(int chunk_x, int chunk_z)
+    public Block[,,] GenerateChunk(int chunkX, int chunkZ)
     {
         Block[,,] blocks = new Block[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
         for (int x = 0; x < Settings.CHUNK_WIDTH; ++x)
         {
             for (int z = 0; z < Settings.CHUNK_WIDTH; ++z)
             {
-                height[x, z] = BASE_HEIGHT + (int)(HEIGHT_MULTIPLICATOR * heightNoise.GetNoise(chunk_x * Settings.CHUNK_WIDTH + x, chunk_z * Settings.CHUNK_WIDTH + z));
-                dirtLevel[x, z] = BASE_DIRT_LEVEL + (int)(DIRT_LEVEL_MULTIPLICATOR * dirtLevelNoise.GetNoise(chunk_x * Settings.CHUNK_WIDTH + x, chunk_z * Settings.CHUNK_WIDTH + z));
+                height[x, z] = BASE_HEIGHT + (int)(HEIGHT_MULTIPLICATOR * heightNoise.GetNoise(chunkX * Settings.CHUNK_WIDTH + x, chunkZ * Settings.CHUNK_WIDTH + z));
+                dirtLevel[x, z] = BASE_DIRT_LEVEL + (int)(DIRT_LEVEL_MULTIPLICATOR * dirtLevelNoise.GetNoise(chunkX * Settings.CHUNK_WIDTH + x, chunkZ * Settings.CHUNK_WIDTH + z));
             }
         }
 

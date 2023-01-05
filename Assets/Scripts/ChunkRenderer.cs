@@ -5,14 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class ChunkRenderer : MonoBehaviour
 {
-    private const float EPSILON = 0.00001f;
     private Mesh mesh;
     private List<Vector3> vertices;
     private List<int> triangles;
     private List<Vector2> uvs;
-    private Block[,,] blocks, blocks_plus_x, blocks_minus_x, blocks_plus_z, blocks_minus_z;
+    private Block[,,] blocks, blocksPlusX, blocksMinusX, blocksPlusZ, blocksMinusZ;
 
-    private Dictionary<FaceOrientation, Vector3[]> face_offsets = new Dictionary<FaceOrientation, Vector3[]>()
+    private Dictionary<FaceOrientation, Vector3[]> faceOffsets = new Dictionary<FaceOrientation, Vector3[]>()
     {
         {
             FaceOrientation.Up, new Vector3[] {
@@ -71,13 +70,13 @@ public class ChunkRenderer : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
     }
 
-    public void UpdateChunk(Block[,,] new_blocks, Block[,,] new_blocks_plus_x, Block[,,] new_blocks_minus_x, Block[,,] new_blocks_plus_z, Block[,,] new_blocks_minus_z)
+    public void UpdateChunk(Block[,,] newBlocks, Block[,,] newBlocksPlusX, Block[,,] newBlocksMinusX, Block[,,] newBlocksPlusZ, Block[,,] newBlocksMinusZ)
     {
-        blocks = new_blocks;
-        blocks_plus_x = new_blocks_plus_x;
-        blocks_minus_x = new_blocks_minus_x;
-        blocks_plus_z = new_blocks_plus_z;
-        blocks_minus_z = new_blocks_minus_z;
+        blocks = newBlocks;
+        blocksPlusX = newBlocksPlusX;
+        blocksMinusX = newBlocksMinusX;
+        blocksPlusZ = newBlocksPlusZ;
+        blocksMinusZ = newBlocksMinusZ;
         vertices = new List<Vector3>();
         triangles = new List<int>();
         uvs = new List<Vector2>();
@@ -128,18 +127,18 @@ public class ChunkRenderer : MonoBehaviour
     {
         if (y < 0 || y >= Settings.CHUNK_HEIGHT) return Block.Air;
         if (Chunk.IsInChunk(x, y, z)) return blocks[x, y, z];
-        if (x < 0) return blocks_minus_x[Settings.CHUNK_WIDTH-1, y, z];
-        if (x >= Settings.CHUNK_WIDTH) return blocks_plus_x[0, y, z];
-        if (z < 0) return blocks_minus_z[x, y, Settings.CHUNK_WIDTH-1];
-        return blocks_plus_z[x, y, 0];
+        if (x < 0) return blocksMinusX[Settings.CHUNK_WIDTH-1, y, z];
+        if (x >= Settings.CHUNK_WIDTH) return blocksPlusX[0, y, z];
+        if (z < 0) return blocksMinusZ[x, y, Settings.CHUNK_WIDTH-1];
+        return blocksPlusZ[x, y, 0];
     }
 
     private void UpdateFace(Vector3 vertex, Block block, FaceOrientation faceOrientation)
     {
         int index = vertices.Count;
 
-        foreach (Vector3 vertex_offset in face_offsets[faceOrientation])
-            vertices.Add(vertex + vertex_offset);
+        foreach (Vector3 vertexOffset in faceOffsets[faceOrientation])
+            vertices.Add(vertex + vertexOffset);
 
         triangles.AddRange(new int[] {
             index + 0,

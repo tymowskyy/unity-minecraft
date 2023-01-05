@@ -5,9 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(TerrainGenerator))]
 public class ChunkManager : MonoBehaviour
 {
-    public GameObject chunk_prefab;
+    public GameObject chunkPrefab;
     private Dictionary<Vector2, GameObject> chunks;
-    private readonly Block[,,] empty_chunk = new Block[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
+    private readonly Block[,,] emptyChunk = new Block[Settings.CHUNK_WIDTH, Settings.CHUNK_HEIGHT, Settings.CHUNK_WIDTH];
     private TerrainGenerator terrainGenerator;
 
     // Start is called before the first frame update
@@ -30,20 +30,20 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    private void GenerateChunk(int chunk_x, int chunk_z)
+    private void GenerateChunk(int chunkX, int chunkZ)
     {
         GameObject chunk = Instantiate(
-            chunk_prefab,
-            new Vector3(Settings.CHUNK_WIDTH * chunk_x, 0, Settings.CHUNK_WIDTH * chunk_z),
+            chunkPrefab,
+            new Vector3(Settings.CHUNK_WIDTH * chunkX, 0, Settings.CHUNK_WIDTH * chunkZ),
             Quaternion.identity,
             transform
         );
         chunks.Add(
-            new Vector2(chunk_x, chunk_z),
+            new Vector2(chunkX, chunkZ),
             chunk
         );
 
-        chunk.GetComponent<Chunk>().blocks = terrainGenerator.GenerateChunk(chunk_x, chunk_z);
+        chunk.GetComponent<Chunk>().blocks = terrainGenerator.GenerateChunk(chunkX, chunkZ);
 
     }
 
@@ -51,10 +51,10 @@ public class ChunkManager : MonoBehaviour
     {
         foreach (var item in chunks)
         {
-            Chunk chunk_component = item.Value.GetComponent<Chunk>();
+            Chunk chunkComponent = item.Value.GetComponent<Chunk>();
 
-            chunk_component.terrain.UpdateChunk(
-                chunk_component.blocks,
+            chunkComponent.terrain.UpdateChunk(
+                chunkComponent.blocks,
                 GetChunkBlocks(item.Key + new Vector2(1, 0)),
                 GetChunkBlocks(item.Key + new Vector2(-1, 0)),
                 GetChunkBlocks(item.Key + new Vector2(0, 1)),
@@ -63,11 +63,11 @@ public class ChunkManager : MonoBehaviour
         }
     }
 
-    private Block[,,] GetChunkBlocks(Vector2 chunk_pos)
+    private Block[,,] GetChunkBlocks(Vector2 chunkPos)
     {
         return
-            chunks.ContainsKey(chunk_pos) ?
-            chunks[chunk_pos].GetComponent<Chunk>().blocks :
-            empty_chunk;
+            chunks.ContainsKey(chunkPos) ?
+            chunks[chunkPos].GetComponent<Chunk>().blocks :
+            emptyChunk;
     }
 }
