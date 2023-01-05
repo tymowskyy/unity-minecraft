@@ -310,7 +310,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1439468030}
-  - component: {fileID: 1439468029}
+  - component: {fileID: 1439468032}
+  - component: {fileID: 1439468031}
   m_Layer: 0
   m_Name: ChunkManager
   m_TagString: Untagged
@@ -318,19 +319,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1439468029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1439468028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad7d181f0a111b469a046aabac1d3d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chunk_prefab: {fileID: 8037542259526982791, guid: 1c2a01f33255aa74bb00808e736b60ce, type: 3}
 --- !u!4 &1439468030
 Transform:
   m_ObjectHideFlags: 0
@@ -346,3 +334,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1439468031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439468028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad7d181f0a111b469a046aabac1d3d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chunkPrefab: {fileID: 8037542259526982791, guid: 1c2a01f33255aa74bb00808e736b60ce, type: 3}
+--- !u!114 &1439468032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439468028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8216afba458bcaf4baccde6508f2f626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
