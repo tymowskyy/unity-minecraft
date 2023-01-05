@@ -12,6 +12,59 @@ public class ChunkRenderer : MonoBehaviour
     private List<Vector2> uvs;
     private Block[,,] blocks, blocks_plus_x, blocks_minus_x, blocks_plus_z, blocks_minus_z;
 
+    private Dictionary<FaceOrientation, Vector3[]> face_offsets = new Dictionary<FaceOrientation, Vector3[]>()
+    {
+        {
+            FaceOrientation.Up, new Vector3[] {
+                new Vector3(1, 1, 0),
+                new Vector3(0, 1, 0),
+                new Vector3(0, 1, 1),
+                new Vector3(1, 1, 1),
+            }
+        },
+        {
+            FaceOrientation.Down, new Vector3[] {
+                new Vector3(0, 0, 0),
+                new Vector3(1, 0, 0),
+                new Vector3(1, 0, 1),
+                new Vector3(0, 0, 1),
+            }
+        },
+        {
+            FaceOrientation.Left, new Vector3[] {
+                new Vector3(0, 0, 0),
+                new Vector3(0, 1, 0),
+                new Vector3(1, 1, 0),
+                new Vector3(1, 0, 0),
+            }
+        },
+        {
+            FaceOrientation.Right, new Vector3[] {
+                new Vector3(1, 0, 1),
+                new Vector3(1, 1, 1),
+                new Vector3(0, 1, 1),
+                new Vector3(0, 0, 1),
+            }
+        },
+        {
+            FaceOrientation.Front, new Vector3[] {
+                new Vector3(1, 0, 0),
+                new Vector3(1, 1, 0),
+                new Vector3(1, 1, 1),
+                new Vector3(1, 0, 1),
+            }
+        },
+        {
+            FaceOrientation.Back, new Vector3[] {
+                new Vector3(0, 0, 1),
+                new Vector3(0, 1, 1),
+                new Vector3(0, 1, 0),
+                new Vector3(0, 0, 0),
+            }
+        },
+    };
+
+
     void Awake()
     {
         mesh = new Mesh();
@@ -53,51 +106,21 @@ public class ChunkRenderer : MonoBehaviour
 
         Vector3 vertex = new Vector3(x, y, z);
         if (GetBlock(x - 1, y, z) == Block.Air)
-            UpdateFace(vertex, new Vector3[] {
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, 1),
-                new Vector3(0, 1, 0),
-                new Vector3(0, 1, 1),
-            });
+            UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Back);
         if (GetBlock(x + 1, y, z) == Block.Air)
-            UpdateFace(vertex, new Vector3[] {
-                new Vector3(1, 0, 0),
-                new Vector3(1, 1, 0),
-                new Vector3(1, 0, 1),
-                new Vector3(1, 1, 1),
-            });
+            UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Front);
 
         if (GetBlock(x, y - 1, z) == Block.Air)
-            UpdateFace(vertex, new Vector3[] {
-                new Vector3(0, 0, 0),
-                new Vector3(1, 0, 0),
-                new Vector3(0, 0, 1),
-                new Vector3(1, 0, 1),
-            });
+            UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Down);
 
         if (GetBlock(x, y + 1, z) == Block.Air)
-            UpdateFace(vertex, new Vector3[] {
-                new Vector3(0, 1, 0),
-                new Vector3(0, 1, 1),
-                new Vector3(1, 1, 0),
-                new Vector3(1, 1, 1),
-            });
+            UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Up);
 
         if (GetBlock(x, y, z - 1) == Block.Air)
-            UpdateFace(vertex, new Vector3[] {
-                new Vector3(0, 0, 0),
-                new Vector3(0, 1, 0),
-                new Vector3(1, 0, 0),
-                new Vector3(1, 1, 0),
-            });
+            UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Left);
 
         if (GetBlock(x, y, z + 1) == Block.Air)
-            UpdateFace(vertex, new Vector3[] {
-                new Vector3(0, 0, 1),
-                new Vector3(1, 0, 1),
-                new Vector3(0, 1, 1),
-                new Vector3(1, 1, 1),
-            });
+            UpdateFace(vertex, blocks[x, y, z], FaceOrientation.Right);
     }
 
     private Block GetBlock(int x, int y, int z)
@@ -110,11 +133,11 @@ public class ChunkRenderer : MonoBehaviour
         return blocks_plus_z[x, y, 0];
     }
 
-    private void UpdateFace(Vector3 vertex, Vector3[] vertices_offsets)
+    private void UpdateFace(Vector3 vertex, Block block, FaceOrientation faceOrientation)
     {
         int index = vertices.Count;
 
-        foreach (Vector3 vertex_offset in vertices_offsets)
+        foreach (Vector3 vertex_offset in face_offsets[faceOrientation])
             vertices.Add(vertex + vertex_offset);
 
         triangles.AddRange(new int[] {
@@ -122,17 +145,14 @@ public class ChunkRenderer : MonoBehaviour
             index + 1,
             index + 2,
             index + 2,
-            index + 1,
             index + 3,
+            index + 0,
         });
 
-        uvs.AddRange(new Vector2[]
-        {
-            new Vector2(0f + EPSILON, 0.75f + EPSILON),
-            new Vector2(0f + EPSILON, 1f - EPSILON),
-            new Vector2(0.25f - EPSILON , 0.75f + EPSILON),
-            new Vector2(0.25f - EPSILON, 1f - EPSILON),
-        });
+        uvs.AddRange(
+            BlockData.GetUVCoordinates(
+                BlockData.spritePositions[block][faceOrientation]
+        ));
     }
 }
  
