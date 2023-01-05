@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class ChunkRenderer : MonoBehaviour
 {
-    private Mesh mesh;
     private List<Vector3> vertices;
     private List<int> triangles;
     private List<Vector2> uvs;
@@ -63,15 +62,10 @@ public class ChunkRenderer : MonoBehaviour
         },
     };
 
-
-    void Awake()
-    {
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
-    }
-
     public void UpdateChunk(Block[,,] newBlocks, Block[,,] newBlocksPlusX, Block[,,] newBlocksMinusX, Block[,,] newBlocksPlusZ, Block[,,] newBlocksMinusZ)
     {
+        Mesh mesh = new Mesh();
+
         blocks = newBlocks;
         blocksPlusX = newBlocksPlusX;
         blocksMinusX = newBlocksMinusX;
@@ -96,6 +90,9 @@ public class ChunkRenderer : MonoBehaviour
         mesh.triangles = triangles.ToArray();
         mesh.uv = uvs.ToArray();
         mesh.RecalculateNormals();
+
+        GetComponent<MeshFilter>().mesh = mesh;
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     private void UpdateBlock(int x, int y, int z)
