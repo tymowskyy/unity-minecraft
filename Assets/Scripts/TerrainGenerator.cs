@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    private FastNoiseLite heightNoise, dirtLevelNoise;
+    public AnimationCurve heightCurve;
+
+    public float HEIGHT_NOISE1_SCALE = 1f;
+    public float HEIGHT_NOISE2_SCALE = 2f;
+    public float HEIGHT_NOISE_WEIGHT = 0.6f;
+
+    private FastNoiseLite heightNoise1, heightNoise2, dirtLevelNoise;
     private int seed;
     private int[,] height = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_WIDTH];
     private int[,] dirtLevel = new int[Settings.CHUNK_WIDTH, Settings.CHUNK_WIDTH];
 
-    private const int BASE_HEIGHT = 32;
-    private const float HEIGHT_MULTIPLICATOR = 10f;
-
-    private const int BASE_DIRT_LEVEL = 5;
-    private const float DIRT_LEVEL_MULTIPLICATOR = 4f;
+    public const int BASE_DIRT_LEVEL = 5;
+    public const float DIRT_LEVEL_MULTIPLICATOR = 4f;
 
     private void Awake()
     {
@@ -21,9 +24,11 @@ public class TerrainGenerator : MonoBehaviour
         Debug.Log("Seed: " + seed);
         System.Random rand = new System.Random(seed);
 
-        heightNoise = new FastNoiseLite(rand.Next() % 100000);
+        heightNoise1 = new FastNoiseLite(rand.Next() % 100000);
+        heightNoise2 = new FastNoiseLite(rand.Next() % 100000);
         dirtLevelNoise = new FastNoiseLite(rand.Next() % 100000);
-        heightNoise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+        heightNoise1.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+        heightNoise2.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
         dirtLevelNoise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
     }
 
@@ -34,7 +39,19 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int z = 0; z < Settings.CHUNK_WIDTH; ++z)
             {
-                height[x, z] = BASE_HEIGHT + (int)(HEIGHT_MULTIPLICATOR * heightNoise.GetNoise(chunkX * Settings.CHUNK_WIDTH + x, chunkZ * Settings.CHUNK_WIDTH + z));
+
+                float heightNoiseValue = MapToZeroOne(Lerp(
+                    heightNoise1.GetNoise(
+                        HEIGHT_NOISE1_SCALE * (float)(chunkX * Settings.CHUNK_WIDTH + x),
+                        HEIGHT_NOISE1_SCALE * (float)(chunkZ * Settings.CHUNK_WIDTH + z)
+                    ),
+                    heightNoise2.GetNoise(
+                        HEIGHT_NOISE2_SCALE * (float)(chunkX * Settings.CHUNK_WIDTH + x),
+                        HEIGHT_NOISE2_SCALE * (float)(chunkZ * Settings.CHUNK_WIDTH + z)
+                    ),
+                    HEIGHT_NOISE_WEIGHT
+                ));
+                height[x, z] = (int)heightCurve.Evaluate(heightNoiseValue); 
                 dirtLevel[x, z] = BASE_DIRT_LEVEL + (int)(DIRT_LEVEL_MULTIPLICATOR * dirtLevelNoise.GetNoise(chunkX * Settings.CHUNK_WIDTH + x, chunkZ * Settings.CHUNK_WIDTH + z));
             }
         }
@@ -59,5 +76,15 @@ public class TerrainGenerator : MonoBehaviour
         else if (y == height[x, z]) return Block.Grass;
         else if(y > height[x, z] - dirtLevel[x, z]) return Block.Dirt;
         return Block.Stone;
+    }
+
+    private float MapToZeroOne(float x)
+    {
+        return (x + 1f) / 2;
+    }
+
+    private float Lerp(float a, float b, float t)
+    {
+        return a * t + b * (1 - t);
     }
 }

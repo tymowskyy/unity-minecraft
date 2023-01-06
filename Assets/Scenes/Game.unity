@@ -547,6 +547,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8216afba458bcaf4baccde6508f2f626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.03652662
+      value: 19.7876
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.67911595
+      value: 26.45418
+      inSlope: 23.319468
+      outSlope: 23.319468
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0260344
+      value: 34.967453
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  HEIGHT_NOISE1_SCALE: 1.2
+  HEIGHT_NOISE2_SCALE: 2
+  HEIGHT_NOISE_WEIGHT: 0.6
 --- !u!1 &1725230214
 GameObject:
   m_ObjectHideFlags: 0
